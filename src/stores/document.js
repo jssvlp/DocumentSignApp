@@ -11,8 +11,8 @@ export const useDocumentStore = defineStore('document', {
         insertInAllPages: true,
         qr: null,
         position: {
-            x: 0,
-            y: 0
+            x: 32,
+            y: 10
         }
 
     }),

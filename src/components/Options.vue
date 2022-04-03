@@ -1,15 +1,15 @@
 <template lang="">
     <div class="card w-96 bg-neutral text-neutral-content">
     <div class="card-body">
-        <h2 class="card-title">Opciones</h2>
+        <h2 class="card-title">Opciones {{type}}</h2>
 
         <label for="">Izquierda/Derecha</label>
-        <input id="xposition" type="range" min="0" max="100" value="30" class="range range-xs"> 
+        <input id="xposition" @input="alert('a')" v-model="x" type="range" min="0" max="1000"  class="range range-xs"> 
         <label for="">Arriba/Abajo</label>
-        <input id="xposition" type="range" min="0" max="100" value="30" class="range range-xs"> 
+        <input id="xposition" v-model="y" type="range" min="0" max="1000"  class="range range-xs"> 
         
         <label for="">Tamaño</label>
-        <input id="xposition" type="range" min="0" max="100" value="50" class="range range-xs"> 
+        <input id="xposition" type="range" min="0" max="100" v-model="size" class="range range-xs"> 
         <div class="divider"></div>
         <div class="form-control">
             <label class="label cursor-pointer">
@@ -43,8 +43,16 @@
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref,watch } from 'vue';
 import { useDocumentStore } from '../stores/document';
+
+
+const x = ref(32);
+const y = ref(10);
+const size = ref(10);
+const props = defineProps({
+    type: String
+});
 
 const store = useDocumentStore();
 
@@ -52,15 +60,28 @@ const setCurrentPage = (page) => {
     store.setCurrentPage(page);
 }
 
+//watchers
 
-// export default {
-//     data: ()=>({
-//         samePosition: true,
-//         insertInAllPages: true,
-//         currentPage: 1,
-//         countPages: 2
-//     }),
-// }
+watch(x, (newVal, oldVal) => {
+    store.position.x = newVal
+});
+
+watch(y, (newVal, oldVal) => {
+    store.position.y = newval
+});
+
+const updatePosition = (e) => {
+    position.value.x = e.clientX;
+    position.value.y = e.clientY;
+}
+
+const moveVertical = (e) => {
+    console.log( e)
+}
+
+const emit = defineEmits({
+    setType: String
+});
 </script>
 <style lang="">
     

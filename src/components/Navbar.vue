@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="navbar-center">
-        <a class="btn btn-ghost normal-case text-xl">SignDocument App</a>
+        <a class="btn btn-ghost normal-case text-2xl"><span class="text-secondary">Sign</span> <span class="text-neutral">Documents</span> <QrcodeIcon class="h-7 w-7 mt-1 text-neutral"/></a>
     </div>
     <div class="navbar-end">
         <button class="btn btn-ghost btn-circle">
@@ -28,3 +28,8 @@
     </div>
     </div>
 </template>
+
+<script setup>
+import { QrcodeIcon } from '@heroicons/vue/solid';
+import { PencilIcon } from '@heroicons/vue/solid';
+</script>

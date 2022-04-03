@@ -1,12 +1,12 @@
 <template lang="">
     <div class="p-10 relative">
         <Overlay v-if="loading"/>
-        <ToolsBar class="mb-3"/>
+        Type:{{type}}
+        <ToolsBar class="mb-3" @setType="setType"/>
         <div class="flex space-x-2">
-            <Options class="shadow-lg"/>
+            <Options :type="type" class="shadow-lg"/>
             <Viewer class="shadow-lg" v-if="!loading" />
         </div>
-
     </div>
 </template>
 <script setup>
@@ -23,6 +23,7 @@ import { downloadFile} from '../api/softexpert.js'
 
 const document = useDocumentStore();
 const loading = ref(true);
+const type = ref('QR');
 
 const setFile = (file) => {
     document.setFile(file);
@@ -49,6 +50,11 @@ const createQr = async (request) => {
 
     document.setQr(qr);
     
+}
+
+const setType = (e) => {
+    console.log( e);
+    type.value = e
 }
 
 onMounted( async () =>{

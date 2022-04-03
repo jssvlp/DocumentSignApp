@@ -1,71 +1,40 @@
 <template lang="">
-    <iframe
-            :src="`data:application/pdf;base64,${store.file}`"
-            width="100%"
-            height="1000"
-            frameborder="0" >
-    </iframe>
+    <img id="qr" v-bind:style="{left: store.position.x + '%', top: store.position.y + '%'}" src="https://chart.apis.google.com/chart?cht=qr&chs=100x100&chl=data" alt="">
+    <embed class="rounded-lg" :src="`data:application/pdf;base64,${store.file}#toolbar=0&navpanes=0&scrollbar=0`" width="100%" height="1000">
 </template>
 <script setup>
 import { useDocumentStore } from '../stores/document';
 
 const store = useDocumentStore();
 
-// export default {
-//     data: () =>({
-//         src: "",
-//         base64String: "",
-//     }),
-    
-//     methods: {
-//         async testLibrary(){
-//             const url = 'test.pdf'
-//             const existißngPdfBytes = await fetch(url).then(res => res.arrayBuffer())
+const props = defineProps({
+    location: {
+        type: Object,
+        default: {
+            x: 32,
+            y: 10
+        }
+    }
+});
 
-//             const pdfDoc = await PDFDocument.load(existingPdfBytes)
-//             const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
-
-//             const pages = pdfDoc.getPages()
-//             const firstPage = pages[0]
-//             const { width, height } = firstPage.getSize()
-//             firstPage.drawText('This text was added with JavaScript!', {
-//                 x: 5,
-//                 y: height / 2 + 300,
-//                 size: 50,
-//                 font: helveticaFont,
-//                 color: rgb(0.95, 0.1, 0.1),
-//                 rotate: degrees(-45),
-//             })
-
-//             const pdfBytes = await pdfDoc.save()
-//             var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(pdfBytes)));
-
-//             const blob = this.base64ToBlob( base64String, "application/pdf");
-//             this.src = URL.createObjectURL( blob );
-
-//         },
-//         base64ToBlob( base64, type = "application/octet-stream" ) {
-//             const binStr = atob( base64 );
-//             const len = binStr.length;
-//             const arr = new Uint8Array(len);
-//             for (let i = 0; i < len; i++) {
-//                 arr[ i ] = binStr.charCodeAt( i );
-//             }
-//             return new Blob( [ arr ], { type: type } );
-//         }
-        
-//     },
-//     watch: {
-//         file( newFile ){
-//             console.log( newFile, 'newFile')
-//             this.base64String = newFile
-//             this.src = "data:application/pdf;base64," + newFile
-//         }
-//     }
+// const updateQrPosition = () => {
+//     const qr = document.getElementById('qr');
+//     const viewer = document.getElementsByClassName('pdfViewer')[0];
+//     const viewerWidth = viewer.clientWidth;
+//     const viewerHeight = viewer.clientHeight;
+//     const qrWidth = qr.clientWidth;
+//     const qrHeight = qr.clientHeight;
+//     const x = viewerWidth / 2 - qrWidth / 2;
+//     const y = viewerHeight / 2 - qrHeight / 2;
+//     qr.style.left = `${x}px`;
+//     qr.style.top = `${y}px`;
 // }
 </script>
 <style >
     iframe{
         border-radius: 10px;
+    }
+    #qr{
+        position: absolute;
     }
 </style>
