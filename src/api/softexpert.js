@@ -11,15 +11,34 @@ const downloadFile = async ( document ) =>{
     return files;
 }
 
+const getDocuments = async ( request ) => {
+    const url = `http://localhost:8000/api/documents/${request}`;
 
-const uploadFile = ( file, name ) =>{
-    const url = `http://159.223.159.18:8000/api/documents/${document}/upload`;
+    var documents = [];
+    await axios.get(url).then( r => {
+        documents = r.data.data
+        console.log( r.data )
+    })
+    return documents;
+}
 
-    axios.post(url, { file: file, name: name  })
+const uploadFile = async ( file, documentData ) =>{
+    const url = `http://localhost:8000/api/documents/${documentData.IDDOCUMENT}/upload`;
+
+    const data = {
+        iddocument: documentData.IDDOCUMENT,
+        base64: file,
+        title: documentData.NMTITLE,
+    };
+
+    var result = null;
+    await axios.post(url, { iddocument: documentData.IDDOCUMENT, file: file, title: documentData.NMTITLE + '- QR'  })
     .then(r => {
-        console.log(r)
+        result = r.data
     });
+
+    return result;
 
 }
 
-export  { downloadFile, uploadFile }
+export  { downloadFile, uploadFile, getDocuments }

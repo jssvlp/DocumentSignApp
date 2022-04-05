@@ -1,22 +1,36 @@
 import { defineStore } from 'pinia'
 import { degrees, PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { decode, encode } from 'base64-arraybuffer';
+import  download  from 'downloadjs'
 
 export const useDocumentStore = defineStore('document', {
     state: () => ({
         file: null,
+        showThisPage: null,
         pages: 0,
         currentPage: 0,
         samePosition: true,
         insertInAllPages: true,
+        size: 150,
         qr: null,
         position: {
-            x: 32,
+            x: 25,
             y: 10
-        }
-
+        },
+        pagesDone: [],
+        document: null,
+        allRequestDocuments: [],
+        loading: false,
+        loadingMessage: 'Cargando...',
+        response: {
+            success:'',
+            message: ''
+        },
     }),
     actions: {
+        setAllRequestDocuments(documents){
+            this.allRequestDocuments = documents;
+        },
         setQr(qr) {
             this.qr = qr
         },
@@ -73,7 +87,7 @@ export const useDocumentStore = defineStore('document', {
 
             this.file = base64String
         },
-        async updateQr(position){
+        async updateQr(){
             const existingPdfBytes = await decode(this.file)
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
             const qr = this.qr.replace('data:image/png;base64,', '')
@@ -88,31 +102,43 @@ export const useDocumentStore = defineStore('document', {
                 for( let i = 0; i < pages.length; i++) {
                     const page = pages[i];
                     page.drawImage(pngImage, {
-                        x:  10  ,
-                        y: page.getHeight()  - pngDims.height - 10 ,
-                        width: pngDims.width,
-                        height: pngDims.height
+                        x: this.position.x + page.getWidth() / 5 - (pngDims.width * 2) - 200,
+                        y: this.position.y + page.getHeight() - (pngDims.height * 2) - 30,
+                        width: this.size,
+                        height: this.size
                     })
+
+                    // console.log( this.position.y + page.getHeight() - (pngDims.height * 2) - 100)
                 }
             }else {
                 const page = pdfDoc.getPages()[this.currentPage];
                 page.drawImage(pngImage, {
-                    x:  10  ,
-                    y: page.getHeight()  - pngDims.height - 10 ,
-                    width: pngDims.width,
-                    height: pngDims.height,
+                    x:  this.position.x,
+                    y:  this.position.y,
+                    width: this.size,
+                    height: this.size,
                 });
             }
             const pdfBytes = await pdfDoc.save()
             
             var base64String = encode(pdfBytes)
-            this.file = base64String
+            this.file =  base64String
         },
         async updateSignature(signature, position, pages){ 
 
         },
         async saveDocument(image, position, pages){
 
+        },
+        setSize(size){
+            this.size = size
+        },
+        downloadDocument(){
+            const pdfBytes = decode(this.file)
+            download(pdfBytes,`${this.document.NMTITLE}.pdf`, "application/pdf");
         }
+
+        
+    
     }
 })

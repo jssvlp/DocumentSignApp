@@ -4,12 +4,12 @@
         <h2 class="card-title">Opciones {{type}}</h2>
 
         <label for="">Izquierda/Derecha</label>
-        <input id="xposition" @input="alert('a')" v-model="x" type="range" min="0" max="1000"  class="range range-xs"> 
+        <input id="xposition" v-model="x" type="range" min="32" max="77" step="0.5" class="range range-xs"> 
         <label for="">Arriba/Abajo</label>
-        <input id="xposition" v-model="y" type="range" min="0" max="1000"  class="range range-xs"> 
+        <input id="xposition" v-model="y" type="range" min="9" max="75" step="0.5" class="range range-xs"> 
         
         <label for="">Tamaño</label>
-        <input id="xposition" type="range" min="0" max="100" v-model="size" class="range range-xs"> 
+        <input id="xposition" type="range" min="30" max="150" step="0.5" v-model="size" class="range range-xs"> 
         <div class="divider"></div>
         <div class="form-control">
             <label class="label cursor-pointer">
@@ -30,13 +30,16 @@
             <div class="flex mt-4">
                 <button  @click="store.updateQr()" class="btn btn-sm btn-secondary w-full">Insertar</button>
             </div>
+            <div class="flex mt-4">
+                <button  @click="store.downloadDocument()" class="btn btn-sm w-full">Descargar</button>
+            </div>
             
             
         </div>
         
         <div class="divider"></div>
         <div class="card-actions justify-end mt-10">
-            <button class="btn btn-primary">Finalizar</button>
+            <button class="btn btn-primary" @click="upload">Finalizar</button>
             <button class="btn btn-ghost">Cancelar</button>
         </div>
     </div>
@@ -45,11 +48,12 @@
 <script setup>
 import { ref,watch } from 'vue';
 import { useDocumentStore } from '../stores/document';
+import { uploadFile } from '../api/softexpert';
 
 
 const x = ref(32);
 const y = ref(10);
-const size = ref(10);
+const size = ref(150);
 const props = defineProps({
     type: String
 });
@@ -63,11 +67,15 @@ const setCurrentPage = (page) => {
 //watchers
 
 watch(x, (newVal, oldVal) => {
-    store.position.x = newVal
+    store.position.x = parseInt(newVal)
 });
 
 watch(y, (newVal, oldVal) => {
-    store.position.y = newval
+    store.position.y = parseInt(newVal)
+});
+
+watch(size, (newVal, oldVal) => {
+    store.size = parseInt(newVal)
 });
 
 const updatePosition = (e) => {
@@ -80,8 +88,17 @@ const moveVertical = (e) => {
 }
 
 const emit = defineEmits({
-    setType: String
+    setType: String,
+    setLoading: Boolean,
 });
+
+const upload = async () => {
+    store.loadingMessage = 'Subiendo documento...';
+    store.loading = true ;
+    const result = await uploadFile(store.file, store.document)
+    store.loading = false;
+    alert(result.message)
+}
 </script>
 <style lang="">
     

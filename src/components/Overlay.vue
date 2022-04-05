@@ -1,7 +1,7 @@
 <template>
     <div class="absolute bg-white bg-opacity-60 z-10 h-full w-full flex items-center justify-center">
     <div class="flex items-center">
-      <span class="text-xl mr-4">Cargando...</span>
+      <span class="text-xl mr-4">{{store.loadingMessage}}</span>
       <!-- loading icon -->
       <svg class="animate-spin h-5 w-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none"
         viewBox="0 0 24 24">
@@ -14,3 +14,10 @@
     </div>
   </div>
 </template>
+<script setup>
+import { defineProps } from "@vue/runtime-core";
+
+import { useDocumentStore } from "../stores/document";
+
+const store = useDocumentStore();
+</script>
