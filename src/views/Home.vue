@@ -1,11 +1,11 @@
 <template lang="">
     <div class="p-10 relative">
         <Overlay v-if="store.loading"/>
-        <ToolsBar class="mb-3" @setType="setType"/>
+        <ToolsBar class="mb-3"/>
         <SelectFile v-if="!documentSelected" :show="documents.length > 0" :documents="documents" @selectDocument="setSelectedDocument"/>
         <div class="flex space-x-2">
-            <Options :type="type" class="shadow-lg"/>
-            <Viewer class="shadow-lg" v-if="!loading && store.file" />
+            <Options class="shadow-lg"/>
+            <Viewer class="shadow-lg" v-if="!store.loading && store.file" />
         </div>
     </div>
 </template>
@@ -18,7 +18,7 @@ import axios from 'axios'
 import { useDocumentStore} from '../stores/document'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import QRCode from 'qrcode'
+
 import { downloadFile, getDocuments} from '../api/softexpert.js'
 import SelectFile from '../components/SelectFile.vue'
 import { extractIdentifiers } from '@vue/compiler-core'
@@ -51,27 +51,36 @@ const setSelectedDocument = async (_document) => {
 
     console.log( files[0])
     setFile( files[0].encode)
-    
-    createQr(requestId);
 }
 
 const addText = (text) => {
     store.addText(text);
 }
 
-const createQr = async (request) => {
-    const url = `google.com/search?q=${request}`;
-    var qr = await QRCode.toDataURL(url, {
-        margin: 0,
-        scale: 10
+const filterDocuments = (documents, filter) => {
+    const _documents = documents.filter(document => {
+        return document.NMTITLE.toLowerCase().includes(filter.toLowerCase());
     });
 
-    store.setQr(qr);
+    return _documents;
+}
+
+const getData = ( data ) =>{
+    const splited = data.split(',');
+    var fields = [];
+
+    splited.map( field => {
+        const current = field.split(':')
+        const obj = { "key" : current[0],"value" : current[1] }
+        fields.push( obj )
+    });
+
+    //ecode to base 64  
+    return btoa(unescape(encodeURIComponent(JSON.stringify(fields))));
     
 }
 
 const setType = (e) => {
-    console.log( e);
     type.value = e
 }
 
@@ -79,13 +88,20 @@ const setType = (e) => {
 onMounted( async () =>{
     const route = useRoute();
     requestId.value = route.query.request
-    documents.value =  await getDocuments( requestId.value );
+    store.documentData = getData( route.query.data )
+    store.company = route.query.company
+    store.request = route.query.request
+    
+    const _documents =  await getDocuments( requestId.value );
+
+    documents.value = filterDocuments(_documents, route.query.filter);
 
     store.setAllRequestDocuments(documents.value);
 
     // const files = await downloadFile(route.query.document);
     // setFile( files[0].encode)
-    // createQr(route.query.request);
+    // const url = `http://localhost:3000/documents/${company}/validate?`;
+    // createQr( url );
     store.loading = false
 });
 

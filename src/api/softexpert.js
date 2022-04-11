@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { softexpertApiHostDev, softexpertApiHostLocal } from '../utils';
 
 const downloadFile = async ( document ) =>{
-    const url = `http://159.223.159.18:8000/api/documents/${document}/download`;
+    const url = `${softexpertApiHostDev}/api/documents/${document}/download`;
     var files = [];
     await axios.get(url).then( r => {
         files = r.data.files
@@ -12,18 +13,17 @@ const downloadFile = async ( document ) =>{
 }
 
 const getDocuments = async ( request ) => {
-    const url = `http://localhost:8000/api/documents/${request}`;
+    const url = `${softexpertApiHostDev}/api/documents/${request}`;
 
     var documents = [];
     await axios.get(url).then( r => {
         documents = r.data.data
-        console.log( r.data )
     })
     return documents;
 }
 
 const uploadFile = async ( file, documentData ) =>{
-    const url = `http://localhost:8000/api/documents/${documentData.IDDOCUMENT}/upload`;
+    const url = `${softexpertApiHostDev}/api/documents/${documentData.IDDOCUMENT}/upload`;
 
     const data = {
         iddocument: documentData.IDDOCUMENT,
@@ -41,4 +41,31 @@ const uploadFile = async ( file, documentData ) =>{
 
 }
 
-export  { downloadFile, uploadFile, getDocuments }
+const saveDocumentData = async ( documentData, request, document ) =>{ 
+    const url = `${softexpertApiHostDev}/api/documents/savedata`;
+
+    var result = null;
+    const data = {
+        data: documentData,
+        request_id: request,
+        document_id: document
+    }
+    await axios.post( url, data ).then( r => {
+        result = r.data
+    })
+
+    return result;
+}
+
+const getDocumentData = async ( document, request ) =>{
+    const url = `${softexpertApiHostDev}/api/documents/request/${request}/document/${document}`;
+    var result = null;
+
+    await axios.get( url).then( r => {
+        result = r.data
+    })
+
+    return result;
+}
+
+export  { downloadFile, uploadFile, getDocuments, getDocumentData, saveDocumentData }

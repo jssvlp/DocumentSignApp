@@ -1,24 +1,41 @@
 <script setup>
 import { ref } from 'vue'
 import { DocumentIcon } from '@heroicons/vue/solid'
+import { useDocumentStore } from '../stores/document';
+import { useRoute } from 'vue-router';
+import QRCode from 'qrcode'
+import {  appUrlLocal } from '../utils';
 
-
+const store = useDocumentStore();
 const documentSelected = ref({});
 
 defineProps({
   show: Boolean,
-  documents: Array
+  documents: Array,
 })
 
 const emit = defineEmits();
 
 const selectDocument = () => {
     emit('selectDocument', documentSelected.value);
-    console.log(documentSelected)
+
+    const url = `${appUrlDev}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
+    store.validationUrl = url
+    console.log( url )
+    createQr( url );
 }
 
 const setSelected = (document) => {
     documentSelected.value = document;
+    
+}
+
+const createQr = async (url) => {
+    var qr = await QRCode.toDataURL(url, {
+        margin: 0,
+        scale: 10
+    });
+    store.setQr(qr);
 }
 
 const count = ref(0)

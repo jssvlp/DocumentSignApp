@@ -48,7 +48,7 @@
 <script setup>
 import { ref,watch } from 'vue';
 import { useDocumentStore } from '../stores/document';
-import { uploadFile } from '../api/softexpert';
+import { saveDocumentData, uploadFile } from '../api/softexpert';
 
 
 const x = ref(32);
@@ -96,6 +96,8 @@ const upload = async () => {
     store.loadingMessage = 'Subiendo documento...';
     store.loading = true ;
     const result = await uploadFile(store.file, store.document)
+
+    const upload = await saveDocumentData( store.documentData, store.request, store.document.IDDOCUMENT)
     store.loading = false;
     alert(result.message)
 }

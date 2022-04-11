@@ -26,6 +26,11 @@ export const useDocumentStore = defineStore('document', {
             success:'',
             message: ''
         },
+        qrData: 'https://google.com',
+        documentData:null,
+        validationUrl: '',
+        company: '',
+        request: ''
     }),
     actions: {
         setAllRequestDocuments(documents){
@@ -102,8 +107,8 @@ export const useDocumentStore = defineStore('document', {
                 for( let i = 0; i < pages.length; i++) {
                     const page = pages[i];
                     page.drawImage(pngImage, {
-                        x: this.position.x + page.getWidth() / 5 - (pngDims.width * 2) - 200,
-                        y: this.position.y + page.getHeight() - (pngDims.height * 2) - 30,
+                        x: page.getWidth() / 2 - pngDims.width / 2 + 200,
+                        y:  page.getHeight() / 2 - pngDims.height + 350,
                         width: this.size,
                         height: this.size
                     })
@@ -113,8 +118,8 @@ export const useDocumentStore = defineStore('document', {
             }else {
                 const page = pdfDoc.getPages()[this.currentPage];
                 page.drawImage(pngImage, {
-                    x:  this.position.x,
-                    y:  this.position.y,
+                    x: page.getWidth() / 2 - pngDims.width / 2 + 200,
+                    y:  page.getHeight() / 2 - pngDims.height + 350,
                     width: this.size,
                     height: this.size,
                 });

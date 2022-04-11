@@ -1,5 +1,5 @@
 <template lang="">
-    <span>Documentos disponibles:</span>
+    <span v-if="store.allRequestDocuments.length > 0">Documentos disponibles:</span>
     <div class="flex  mb-2">
         <!-- <div @click="setType('QR')" class="flex bg-gray-200 rounded-md p-2 cursor-pointer">
             <QrcodeIcon class="h-5 w-5 text-primary"/> <span class="text-xs mt-1">Insertar QR</span>
@@ -27,9 +27,9 @@ const store = useDocumentStore();
 
 const emit = defineEmits();
 
-const setType = (type) => {
-    emit('setType', type);
-}
+// const setType = (type) => {
+//     emit('setType', type);
+// }
 
 const changeCurrentDocument = () => {
     emit('changeCurrentDocument', selectedDocument.value);
