@@ -52,10 +52,12 @@ export const useDocumentStore = defineStore('document', {
             this.currentPage = page
         },
         async setFile(file) {
+            console.log( file )
             const existingPdfBytes = await decode(file)
 
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
-            const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+            
+            // const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
 
             const pages = pdfDoc.getPages()
             this.pages = pages.length
@@ -113,7 +115,6 @@ export const useDocumentStore = defineStore('document', {
                         height: this.size
                     })
 
-                    // console.log( this.position.y + page.getHeight() - (pngDims.height * 2) - 100)
                 }
             }else {
                 const page = pdfDoc.getPages()[this.currentPage];

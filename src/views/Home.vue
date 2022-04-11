@@ -49,8 +49,8 @@ const setSelectedDocument = async (_document) => {
 
     const files = await downloadFile(_document.IDDOCUMENT);
 
-    console.log( files[0])
-    setFile( files[0].encode)
+    // store.file = files[0].encode;
+    setFile( files[0].encode);
 }
 
 const addText = (text) => {

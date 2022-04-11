@@ -36,8 +36,6 @@ onMounted(async () => {
     
     const data = await getDocumentData(documento, solicitud);
 
-    console.log( data.data )
-
     fields.value = JSON.parse( data.data.data)
     
 });

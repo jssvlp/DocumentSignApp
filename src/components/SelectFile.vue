@@ -4,7 +4,7 @@ import { DocumentIcon } from '@heroicons/vue/solid'
 import { useDocumentStore } from '../stores/document';
 import { useRoute } from 'vue-router';
 import QRCode from 'qrcode'
-import {  appUrlLocal } from '../utils';
+import {  appUrlLocal,appUrlDev  } from '../hosts';
 
 const store = useDocumentStore();
 const documentSelected = ref({});
@@ -19,7 +19,7 @@ const emit = defineEmits();
 const selectDocument = () => {
     emit('selectDocument', documentSelected.value);
 
-    const url = `${appUrlDev}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
+    const url = `${appUrlLocal}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
     store.validationUrl = url
     console.log( url )
     createQr( url );

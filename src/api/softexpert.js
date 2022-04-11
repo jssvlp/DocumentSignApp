@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { softexpertApiHostDev, softexpertApiHostLocal } from '../utils';
+import { softexpertApiHostDev, softexpertApiHostLocal } from '../hosts';
 
 const downloadFile = async ( document ) =>{
     const url = `${softexpertApiHostDev}/api/documents/${document}/download`;
