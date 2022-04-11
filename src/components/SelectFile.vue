@@ -19,7 +19,7 @@ const emit = defineEmits();
 const selectDocument = () => {
     emit('selectDocument', documentSelected.value);
 
-    const url = `${appUrlLocal}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
+    const url = `${appUrlDev}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
     store.validationUrl = url
     console.log( url )
     createQr( url );
