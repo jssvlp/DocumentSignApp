@@ -9,6 +9,8 @@ import {  appUrlLocal,appUrlDev  } from '../hosts';
 const store = useDocumentStore();
 const documentSelected = ref({});
 
+const host = appUrlLocal
+
 defineProps({
   show: Boolean,
   documents: Array,
@@ -19,7 +21,7 @@ const emit = defineEmits();
 const selectDocument = () => {
     emit('selectDocument', documentSelected.value);
 
-    const url = `${appUrlDev}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
+    const url = `${host}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
     store.validationUrl = url
     console.log( url )
     createQr( url );

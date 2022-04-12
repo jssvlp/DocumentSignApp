@@ -7,15 +7,31 @@
             <span class="font-bold text-white text-2xl">¡Datos validados correctamente!</span>
         </div>
         
-        <div class="shadow-md p-10">
-            <div class="flex justify-center mt-3">
-            <span class="text-xl font-bold mb-2">Datos del documento</span>
-        </div>
-            <div v-for="(field, index) in fields" :key="index">
-                <div class="flex justify-self-auto">
-                    <span class="text-lg font-bold mt-1">{{field.key.replace('”','')}}</span>
-                    <span class="text-lg mt-1">: {{field.value.replace('”','')}}</span>
+        <div class="shadow-md p-10 rounded-lg">
+            <div class=" mt-3 mb-4">
+                <span class="text-xl font-semibold mb-2">Información del documento</span>
+                <br>
+                <span class="text-sm text-gray-400">
+                    Aquí encontrarás los datos del documeento
+                </span>
+            </div>
+            <div class="divider"></div>
+            <div class="grid md:grid-cols-3 gap-3 grid-cols-1">    
+                <div v-for="(field, index) in fields" :key="index">
+                    <div class="mt-4">
+                        <span class="text-sm text-gray-400 mt-1">{{field.key.replace('”','')}}</span>
+                        <br>
+                        <span class="text-xl mt-1"> {{field.value.replace('”','')}}</span>
+                    </div>
                 </div>
+            </div>
+            <div class="divider"></div>
+            <span class="text-gray-400">Documento</span>
+            <div class="rounded-md border-2 p-2 flex justify-between">
+                <div class="flex">
+                    <PaperClipIcon class="h-5 w-5 mt-1 text-gray-500"/> <span>Certificación de no Objeción</span>
+                </div>
+                <span class="text-blue-400 cursor-pointer">Descargar</span>
             </div>
         </div>
     </div>
@@ -26,6 +42,7 @@ import { onMounted } from '@vue/runtime-core';
 import { useRoute } from 'vue-router';
 import { ref } from 'vue';
 import { getDocumentData } from '../api/softexpert';
+import { PaperClipIcon } from '@heroicons/vue/solid';
 
 const route = useRoute();
 const fields = ref([]);

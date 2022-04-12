@@ -57,7 +57,15 @@ const addText = (text) => {
     store.addText(text);
 }
 
-const filterDocuments = (documents, filter) => {
+const filterDocuments = (documents, filters) => {
+    const _filters = filters.split(',');
+    console.log(_filters)
+
+    return documents.filter(document => {
+        return _filters.some(filter => {
+            return document.IDCATEGORY.includes(filter);
+        });
+    });
     const _documents = documents.filter(document => {
         return document.NMTITLE.toLowerCase().includes(filter.toLowerCase());
     });
