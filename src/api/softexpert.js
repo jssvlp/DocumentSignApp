@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { softexpertApiHostDev, softexpertApiHostLocal } from '../hosts';
 
-const host = softexpertApiHostLocal;
+const host = softexpertApiHostDev;
 
 const downloadFile = async ( document ) =>{
     const url = `${host}/api/documents/${document}/download`;

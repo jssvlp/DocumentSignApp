@@ -9,7 +9,7 @@ import {  appUrlLocal,appUrlDev  } from '../hosts';
 const store = useDocumentStore();
 const documentSelected = ref({});
 
-const host = appUrlLocal
+const host = appUrlDev;
 
 defineProps({
   show: Boolean,
