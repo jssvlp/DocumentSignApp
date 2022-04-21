@@ -74,10 +74,13 @@ const filterDocuments = (documents, filters) => {
 }
 
 const getData = ( data ) =>{
-    const splited = data.split(',');
+    //decode base64
+    const decoded = atob(data);
+    const _data = JSON.parse(decoded);
+
     var fields = [];
 
-    splited.map( field => {
+    _data.map( field => {
         const current = field.split(':')
         const obj = { "key" : current[0],"value" : current[1] }
         fields.push( obj )
@@ -96,7 +99,7 @@ const setType = (e) => {
 onMounted( async () =>{
     const route = useRoute();
     requestId.value = route.query.request
-    store.documentData = getData( route.query.data )
+    store.documentData =  route.query.data
     store.company = route.query.company
     store.request = route.query.request
     

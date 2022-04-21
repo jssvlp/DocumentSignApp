@@ -19,12 +19,16 @@ defineProps({
 const emit = defineEmits();
 
 const selectDocument = () => {
-    emit('selectDocument', documentSelected.value);
-
-    const url = `${host}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
-    store.validationUrl = url
-    console.log( url )
-    createQr( url );
+    if( documentSelected.value.IDDOCUMENT ){
+      emit('selectDocument', documentSelected.value);
+      const url = `${host}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
+      store.validationUrl = url;
+      console.log( url );
+      createQr( url );
+    }else {
+      alert('¡No ha seleccionado ningún documento!');
+    }
+    
 }
 
 const setSelected = (document) => {
@@ -56,7 +60,8 @@ const count = ref(0)
           </li>
       </ul>
     <div class="modal-action">
-      <button @click="selectDocument" class="btn text-gray-200">¡Continuar!</button>
+    {{documentSelected.value}}
+      <button  @click="selectDocument" class="btn text-gray-200">¡Continuar!</button>
     </div>
   </div>
 </div>

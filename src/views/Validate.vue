@@ -19,19 +19,19 @@
             <div class="grid md:grid-cols-3 gap-3 grid-cols-1 mb-10">    
                 <div v-for="(field, index) in fields" :key="index">
                     <div class="mt-4">
-                        <span class="text-sm text-gray-400 mt-1">{{field.key.replace('”','')}}</span>
+                        <span class="text-sm text-gray-400 mt-1">{{field.key}}</span>
                         <br>
-                        <span class="text-xl mt-1"> {{field.value.replace('”','')}}</span>
+                        <span class="text-xl mt-1"> {{field.value}}</span>
                     </div>
                 </div>
             </div>
-            <span class="text-gray-400">Documento</span>
+            <!-- <span class="text-gray-400">Documento</span>
             <div class="rounded-md border-2 p-2 flex justify-between">
                 <div class="flex">
                     <PaperClipIcon class="h-5 w-5 mt-1 text-gray-500"/> <span>Certificación de no Objeción</span>
                 </div>
                 <span class="text-blue-400 cursor-pointer">Descargar</span>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -50,9 +50,13 @@ const fields = ref([]);
 onMounted(async () => {
     const { documento, solicitud } = route.query;
     
-    const data = await getDocumentData(documento, solicitud);
+    const { data } = await getDocumentData(documento, solicitud);
 
-    fields.value = JSON.parse( data.data.data)
+    const parsed = JSON.parse(data.data);
+
+    console.log( parsed )
+
+   fields.value = parsed
     
 });
 </script>

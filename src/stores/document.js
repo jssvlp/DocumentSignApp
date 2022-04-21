@@ -30,7 +30,8 @@ export const useDocumentStore = defineStore('document', {
         documentData:null,
         validationUrl: '',
         company: '',
-        request: ''
+        request: '',
+        showQr: true
     }),
     actions: {
         setAllRequestDocuments(documents){
@@ -142,7 +143,7 @@ export const useDocumentStore = defineStore('document', {
         downloadDocument(){
             const pdfBytes = decode(this.file)
             download(pdfBytes,`${this.document.NMTITLE}.pdf`, "application/pdf");
-        }
+        },
 
         
     
