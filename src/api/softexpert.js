@@ -1,11 +1,10 @@
 import axios from 'axios'
-import { softexpertApiHostDev, softexpertApiHostLocal } from '../hosts';
-
-const host = softexpertApiHostDev;
+import { softexpertApi,  fileServer } from '../hosts';
 
 const downloadFile = async ( document ) =>{
-    const url = `${host}/api/documents/${document}/download`;
+    const url = `${fileServer}/api/documents/${document}/download`;
     var files = [];
+    
     await axios.get(url).then( r => {
         files = r.data.files
         
@@ -15,7 +14,7 @@ const downloadFile = async ( document ) =>{
 }
 
 const getDocuments = async ( request,categories ) => {
-    const url = `${host}/api/documents/${request}?categories=${categories}`;
+    const url = `${softexpertApi}/api/documents/${request}?categories=${categories}`;
 
     var documents = [];
     await axios.get(url).then( r => {
@@ -25,7 +24,7 @@ const getDocuments = async ( request,categories ) => {
 }
 
 const uploadFile = async ( file, documentData ) =>{
-    const url = `${host}/api/documents/${documentData.IDDOCUMENT}/upload`;
+    const url = `${softexpertApi}/api/documents/${documentData.IDDOCUMENT}/upload`;
 
     const data = {
         iddocument: documentData.IDDOCUMENT,
@@ -44,7 +43,7 @@ const uploadFile = async ( file, documentData ) =>{
 }
 
 const saveDocumentData = async ( documentData, request, document ) =>{ 
-    const url = `${host}/api/documents/savedata`;
+    const url = `${softexpertApi}/api/documents/savedata`;
 
     var result = null;
     const data = {
@@ -60,7 +59,8 @@ const saveDocumentData = async ( documentData, request, document ) =>{
 }
 
 const getDocumentData = async ( document, request ) =>{
-    const url = `${host}/api/documents/request/${request}/document/${document}`;
+    const url = `${softexpertApi}/api/documents/request/${request}/document/${document}`;
+    console.log(url);
     var result = null;
 
     await axios.get( url).then( r => {

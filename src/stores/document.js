@@ -72,8 +72,6 @@ export const useDocumentStore = defineStore('document', {
             const waitPdfBytes = await loadWaitPdfBytes();
             this.waitPdfFile = encode(waitPdfBytes);;
             
-            // const url = 'https://apisoftexpert.servicios.mitur.gob.do/storage/6zOE5VWm9v.pdf'
-            //const url = file.route;
             const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
             const pages = pdfDoc.getPages();
