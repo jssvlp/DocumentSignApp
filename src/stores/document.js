@@ -2,20 +2,24 @@ import { defineStore } from 'pinia'
 import { degrees, PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { decode, encode } from 'base64-arraybuffer';
 import  download  from 'downloadjs'
+import { loadWaitPdfBytes } from '../utils/wait.js';
 
 export const useDocumentStore = defineStore('document', {
     state: () => ({
+        src: null,
         file: null,
         showThisPage: null,
         pages: 0,
-        currentPage: 0,
-        samePosition: true,
-        insertInAllPages: true,
-        size: 150,
+        currentPage: 1,
+        samePosition: false,
+        insertInAllPages: false,
+        size: 100,
+        width: 0,
+        height: 0,
         qr: null,
         position: {
-            x: 25,
-            y: 10
+            x: 0,
+            y: 0
         },
         pagesDone: [],
         document: null,
@@ -31,7 +35,9 @@ export const useDocumentStore = defineStore('document', {
         validationUrl: '',
         company: '',
         request: '',
-        showQr: true
+        showQr: false,
+        uid: Math.floor(Math.random() * 1000000 + 1),
+        waitPdfFile: null
     }),
     actions: {
         setAllRequestDocuments(documents){
@@ -45,25 +51,43 @@ export const useDocumentStore = defineStore('document', {
         },
         next(){
             this.currentPage++
+            const copy = this.file
+            this.file = this.waitPdfFile
+            setTimeout(() => this.file = copy, 100);
         },
         prev(){
-            this.currentPage--
+            if(this.currentPage > 1){
+                this.currentPage--
+                const copy = this.file
+                this.file = this.waitPdfFile
+                setTimeout(() => this.file = copy, 100);
+                // this.file = copy
+            }
         },
         setCurrentPage( page) {
-            this.currentPage = page
+            this.currentPage = parseInt(page)
         },
         async setFile(file) {
-            console.log( file )
-            const existingPdfBytes = await decode(file)
 
+            const waitPdfBytes = await loadWaitPdfBytes();
+            this.waitPdfFile = encode(waitPdfBytes);;
+            
+            const url = 'https://apisoftexpert.servicios.mitur.gob.do/storage/6zOE5VWm9v.pdf'
+            //const url = file.route;
+            const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
+            const pages = pdfDoc.getPages();
             
-            // const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+            this.width = pages[0].getWidth()
+            this.height = pages[0].getHeight();
+            this.pages = pages;
+            this.showThisPage = pages[0];
 
-            const pages = pdfDoc.getPages()
-            this.pages = pages.length
-            this.file = file
-            
+            const pdfBytes = await pdfDoc.save();
+            const base64String = encode(pdfBytes);
+
+            this.src = `data:application/pdf;base64,${base64String}#toolbar=0&navpanes=0&scrollbar=0`
+            this.file = base64String
         },
         setSamePosition(samePosition) {
             this.samePosition = samePosition
@@ -100,28 +124,26 @@ export const useDocumentStore = defineStore('document', {
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
             const qr = this.qr.replace('data:image/png;base64,', '')
             const pngImageBytes = decode(qr)
-
             const pngImage = await pdfDoc.embedPng(pngImageBytes)
 
             const pngDims = pngImage.scale(0.2)
-
             if( this.insertInAllPages) {
                 const pages = pdfDoc.getPages();
                 for( let i = 0; i < pages.length; i++) {
                     const page = pages[i];
                     page.drawImage(pngImage, {
-                        x: page.getWidth() / 2 - pngDims.width / 2 + 200,
-                        y:  page.getHeight() / 2 - pngDims.height + 350,
+                        x: this.position.x,
+                        y:  this.position.y == 0 ? this.height - this.size : this.height -  (this.position.y + this.size),
                         width: this.size,
                         height: this.size
                     })
 
                 }
             }else {
-                const page = pdfDoc.getPages()[this.currentPage];
+                const page = pdfDoc.getPages()[this.currentPage - 1];
                 page.drawImage(pngImage, {
-                    x: page.getWidth() / 2 - pngDims.width / 2 + 200,
-                    y:  page.getHeight() / 2 - pngDims.height + 350,
+                    x: this.position.x,
+                    y:  this.position.y,
                     width: this.size,
                     height: this.size,
                 });
@@ -130,6 +152,9 @@ export const useDocumentStore = defineStore('document', {
             
             var base64String = encode(pdfBytes)
             this.file =  base64String
+            this.src = `data:application/pdf;base64,${base64String}#toolbar=0&navpanes=0&scrollbar=0`
+            // this.showQr = false
+
         },
         async updateSignature(signature, position, pages){ 
 

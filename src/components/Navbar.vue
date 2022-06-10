@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="navbar-center">
-        <a class="btn btn-ghost normal-case text-2xl"><span class="text-secondary">Sign</span> <span class="text-neutral">Documents</span> <QrcodeIcon class="h-7 w-7 mt-1 text-neutral"/></a>
+        <a class="btn btn-ghost normal-case text-2xl"><span class="text-secondary">Qr</span> <span class="text-neutral">Documentos</span> <QrcodeIcon class="h-7 w-7 mt-1 text-neutral"/></a>
     </div>
     <div class="navbar-end">
         <button class="btn btn-ghost btn-circle">

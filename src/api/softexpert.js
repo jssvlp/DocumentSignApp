@@ -14,8 +14,8 @@ const downloadFile = async ( document ) =>{
     return files;
 }
 
-const getDocuments = async ( request ) => {
-    const url = `${host}/api/documents/${request}`;
+const getDocuments = async ( request,categories ) => {
+    const url = `${host}/api/documents/${request}?categories=${categories}`;
 
     var documents = [];
     await axios.get(url).then( r => {

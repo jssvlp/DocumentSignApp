@@ -5,7 +5,7 @@
         <SelectFile v-if="!documentSelected" :show="documents.length > 0" :documents="documents" @selectDocument="setSelectedDocument"/>
         <div class="flex space-x-2">
             <Options class="shadow-lg"/>
-            <Viewer class="shadow-lg" v-if="!store.loading && store.file" />
+            <Viewer class="" v-if="!store.loading" />
         </div>
     </div>
 </template>
@@ -48,53 +48,20 @@ const setSelectedDocument = async (_document) => {
     store.document = _document
 
     const files = await downloadFile(_document.IDDOCUMENT);
-
-    // store.file = files[0].encode;
-    setFile( files[0].encode);
+    
+    //store.file = files[0].route;
+    setFile( files[0]);
+    store.showQr = true;
+    //store.file = "http://127.0.0.1:8000/storage/LPFnOMfu5B.pdf";
 }
 
 const addText = (text) => {
     store.addText(text);
 }
 
-const filterDocuments = (documents, filters) => {
-    const _filters = filters.split(',');
-    console.log(_filters)
-
-    return documents.filter(document => {
-        return _filters.some(filter => {
-            return document.IDCATEGORY.includes(filter);
-        });
-    });
-    const _documents = documents.filter(document => {
-        return document.NMTITLE.toLowerCase().includes(filter.toLowerCase());
-    });
-
-    return _documents;
-}
-
-const getData = ( data ) =>{
-    //decode base64
-    const decoded = atob(data);
-    const _data = JSON.parse(decoded);
-
-    var fields = [];
-
-    _data.map( field => {
-        const current = field.split(':')
-        const obj = { "key" : current[0],"value" : current[1] }
-        fields.push( obj )
-    });
-
-    //ecode to base 64  
-    return btoa(unescape(encodeURIComponent(JSON.stringify(fields))));
-    
-}
-
 const setType = (e) => {
     type.value = e
 }
-
 
 onMounted( async () =>{
     const route = useRoute();
@@ -102,18 +69,13 @@ onMounted( async () =>{
     store.documentData =  route.query.data
     store.company = route.query.company
     store.request = route.query.request
-    
-    const _documents =  await getDocuments( requestId.value );
 
-    documents.value = filterDocuments(_documents, route.query.filter);
+    documents.value =  await getDocuments( requestId.value, route.query.filter );
 
     store.setAllRequestDocuments(documents.value);
 
-    // const files = await downloadFile(route.query.document);
-    // setFile( files[0].encode)
-    // const url = `http://localhost:3000/documents/${company}/validate?`;
-    // createQr( url );
     store.loading = false
+    
 });
 
 

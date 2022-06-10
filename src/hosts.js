@@ -1,7 +1,7 @@
-const softexpertApiHostLocal = "http://localhost:8000"
-const softexpertApiHostDev = "http://159.223.159.18:8000"
+const softexpertApiHostLocal = "http://127.0.0.1:8000"
+const softexpertApiHostDev = "https://apisoftexpert.servicios.mitur.gob.do"
 
 const appUrlLocal = "http://localhost:3000";
-const appUrlDev = "http://servicios.mitur.gob.do:3004";
+const appUrlDev = "http://qr.servicios.mitur.gob.do";
 
 export { softexpertApiHostDev, softexpertApiHostLocal, appUrlDev, appUrlLocal };
