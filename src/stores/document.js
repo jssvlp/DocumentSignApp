@@ -18,8 +18,8 @@ export const useDocumentStore = defineStore('document', {
         height: 0,
         qr: null,
         position: {
-            x: 0,
-            y: 0
+            x: 435,
+            y: 30
         },
         pagesDone: [],
         document: null,
@@ -53,15 +53,22 @@ export const useDocumentStore = defineStore('document', {
             this.currentPage++
             const copy = this.file
             this.file = this.waitPdfFile
-            setTimeout(() => this.file = copy, 100);
+            this.showQr = false
+            setTimeout(() => {
+                this.file = copy
+                this.showQr = true
+            }, 100);
         },
         prev(){
             if(this.currentPage > 1){
                 this.currentPage--
                 const copy = this.file
                 this.file = this.waitPdfFile
-                setTimeout(() => this.file = copy, 100);
-                // this.file = copy
+                this.showQr = false
+                setTimeout(() => {
+                    this.file = copy
+                    this.showQr = true
+                }, 100);
             }
         },
         setCurrentPage( page) {
@@ -72,9 +79,7 @@ export const useDocumentStore = defineStore('document', {
             const waitPdfBytes = await loadWaitPdfBytes();
             this.waitPdfFile = encode(waitPdfBytes);
 
-            const a = 'https://fileserver.servicios.mitur.gob.do/file?id=eyJpdiI6ImxKRnNIMG1lbWtcLzZ1TG9QT3l1bUFRPT0iLCJ2YWx1ZSI6InFNR1BQa3BtU3JKaUxicGdhTXFBV2VONWJtUWhWVzZKNHQ4YkxJaVQ5OUk9IiwibWFjIjoiNWY3MTJiNGY1YWFkOGI0ZGYwODVhYjJmYTg0Y2UwNTA2ZDE1YTc3ZDUyM2E1YjA4OWUwOTU5NmI4ZTQzNTBiMSJ9&e=1654927330&s=f1179e8f9431cf6b04d7a6d388ba10dc';
-            
-            const existingPdfBytes = await fetch(a).then(res => res.arrayBuffer())
+            const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
             const pages = pdfDoc.getPages();
             
@@ -153,7 +158,7 @@ export const useDocumentStore = defineStore('document', {
             var base64String = encode(pdfBytes)
             this.file =  base64String
             this.src = `data:application/pdf;base64,${base64String}#toolbar=0&navpanes=0&scrollbar=0`
-            // this.showQr = false
+            this.showQr = false
 
         },
         async updateSignature(signature, position, pages){ 
