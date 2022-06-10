@@ -31,7 +31,7 @@
                 <button  @click="insertQr" class="btn btn-sm btn-secondary w-full">Insertar</button>
             </div>
             <div class="flex mt-4">
-                <button  @click="store.downloadDocument()" class="btn btn-sm w-full">Descargar</button>
+                <button  @click="download()" class="btn btn-sm w-full">Descargar</button>
             </div>
         </div>
         
@@ -62,8 +62,17 @@ const setCurrentPage = (page) => {
     store.setCurrentPage(page);
 }
 
-//watchers
 
+const download = async () =>{
+    store.loadingMessage = 'Generando datos de consulta...';
+    store.loading = true ;
+
+    const save = await saveDocumentData( store.documentData, store.request, store.document.IDDOCUMENT)
+    store.loading = false;
+    store.downloadDocument()
+}
+
+//watchers
 watch(x, (newVal, oldVal) => {
     store.position.x = parseInt(newVal)
     // console.log( 'position', store.position)
@@ -104,8 +113,10 @@ const upload = async () => {
 }
 
 const insertQr = async () => {
+    store.loading = true ;
     store.loadingMessage = 'Insertando código QR...';   
-    store.updateQr()
+    await store.updateQr()
+    store.loading = false;
 }
 </script>
 <style lang="">
