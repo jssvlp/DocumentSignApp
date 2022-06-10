@@ -4,12 +4,12 @@
         <h2 class="card-title">Opciones {{type}}</h2>
 
         <label for="">Izquierda/Derecha</label>
-        <input id="xposition" v-model="x" type="range" min="32" max="77" step="0.5" class="range range-xs"> 
+        <input id="xposition" v-model="x" type="range" min="0" :max="store.width - store.size" :step="5" class="range range-xs"> 
         <label for="">Arriba/Abajo</label>
-        <input id="xposition" v-model="y" type="range" min="9" max="75" step="0.5" class="range range-xs"> 
+        <input id="xposition" v-model="y" type="range" min="0" :max="store.height - store.size" :step="5" class="range range-xs"> 
         
         <label for="">Tamaño</label>
-        <input id="xposition" type="range" min="30" max="150" step="0.5" v-model="size" class="range range-xs"> 
+        <input id="xposition" type="range" min="100" max="200" step="10" v-model="size" class="range range-xs"> 
         <div class="divider"></div>
         <div class="form-control">
             <label class="label cursor-pointer">
@@ -21,20 +21,18 @@
                 <input v-model="store.samePosition" type="checkbox" class="toggle toggle-primary" >
             </label>
             <div class="flex space-x-1 mb-2 mt-2">
-                <button v-if="!store.samePosition" v-bind:class="store.currentPage < 1 ? 'btn-disabled text-gray-500' : 'btn-secondary'" @click="store.prev()" class="btn btn-xs  btn-outline">Anterior</button>
-                <button v-if="!store.samePosition" v-bind:class="store.currentPage == store.pages - 1 ? 'btn-disabled text-gray-500': 'btn-secondary'" @click="store.next()" class="btn btn-xs  btn-outline">Siguiente</button>
+                <button v-if="!store.samePosition" v-bind:class="store.currentPage < 2 ? 'btn-disabled text-gray-500' : 'btn-secondary'" @click="store.prev()" class="btn btn-xs  btn-outline">Anterior</button>
+                <button v-if="!store.samePosition" v-bind:class="store.currentPage == store.pages.length - 1 ? 'btn-disabled text-gray-500': 'btn-secondary'" @click="store.next()" class="btn btn-xs  btn-outline">Siguiente</button>
             </div>
             <div v-if="!store.samePosition">
-                <span class="text-white text-xs">Pagina actual {{store.currentPage + 1}}/{{store.pages}}</span>
+                <span class="text-white text-xs">Pagina actual {{store.currentPage }}/{{store.pages.length}}</span>
             </div>
             <div class="flex mt-4">
-                <button  @click="store.updateQr()" class="btn btn-sm btn-secondary w-full">Insertar</button>
+                <button  @click="insertQr" class="btn btn-sm btn-secondary w-full">Insertar</button>
             </div>
             <div class="flex mt-4">
                 <button  @click="store.downloadDocument()" class="btn btn-sm w-full">Descargar</button>
             </div>
-            
-            
         </div>
         
         <div class="divider"></div>
@@ -68,6 +66,7 @@ const setCurrentPage = (page) => {
 
 watch(x, (newVal, oldVal) => {
     store.position.x = parseInt(newVal)
+    // console.log( 'position', store.position)
 });
 
 watch(y, (newVal, oldVal) => {
@@ -100,6 +99,13 @@ const upload = async () => {
     const upload = await saveDocumentData( store.documentData, store.request, store.document.IDDOCUMENT)
     store.loading = false;
     alert(result.message)
+
+    store.showQr = false;
+}
+
+const insertQr = async () => {
+    store.loadingMessage = 'Insertando código QR...';   
+    store.updateQr()
 }
 </script>
 <style lang="">
