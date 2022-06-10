@@ -48,7 +48,6 @@ const setSelectedDocument = async (_document) => {
     store.document = _document
 
     const files = await downloadFile(_document.IDDOCUMENT);
-    
     //store.file = files[0].route;
     setFile( files[0].route);
     store.showQr = true;
@@ -70,7 +69,7 @@ onMounted( async () =>{
     store.company = route.query.company
     store.request = route.query.request
 
-    documents.value =  await getDocuments( requestId.value, route.query.filter );
+    documents.value =  await getDocuments( store.request, route.query.filter );
 
     store.setAllRequestDocuments(documents.value);
 

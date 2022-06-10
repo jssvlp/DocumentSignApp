@@ -4,12 +4,10 @@ import { DocumentIcon } from '@heroicons/vue/solid'
 import { useDocumentStore } from '../stores/document';
 import { useRoute } from 'vue-router';
 import QRCode from 'qrcode'
-import {  appUrlLocal,appUrlDev  } from '../hosts';
+import {  appUrl  } from '../hosts';
 
 const store = useDocumentStore();
 const documentSelected = ref({});
-
-const host = appUrlDev;
 
 defineProps({
   show: Boolean,
@@ -21,7 +19,7 @@ const emit = defineEmits();
 const selectDocument = () => {
     if( documentSelected.value.IDDOCUMENT ){
       emit('selectDocument', documentSelected.value);
-      const url = `${host}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
+      const url = `${appUrl}/documents/validate?solicitud=${store.request}&documento=${documentSelected.value.IDDOCUMENT}`;
       store.validationUrl = url;
       console.log( url );
       createQr( url );
