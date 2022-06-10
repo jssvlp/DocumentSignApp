@@ -49,17 +49,9 @@ const fields = ref([]);
 
 onMounted(async () => {
     const { documento, solicitud } = route.query;
-
-    console.log(documento, solicitud);
-    return
-    
     const { data } = await getDocumentData(documento, solicitud);
-
     const parsed = JSON.parse(data.data);
 
-    console.log( parsed )
-
-   fields.value = parsed
-    
+    fields.value = parsed
 });
 </script>

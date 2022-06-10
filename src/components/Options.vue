@@ -22,7 +22,7 @@
             </label>
             <div class="flex space-x-1 mb-2 mt-2">
                 <button v-if="!store.samePosition" v-bind:class="store.currentPage < 2 ? 'btn-disabled text-gray-500' : 'btn-secondary'" @click="store.prev()" class="btn btn-xs  btn-outline">Anterior</button>
-                <button v-if="!store.samePosition" v-bind:class="store.currentPage == store.pages.length - 1 ? 'btn-disabled text-gray-500': 'btn-secondary'" @click="store.next()" class="btn btn-xs  btn-outline">Siguiente</button>
+                <button v-if="!store.samePosition" v-bind:class="store.currentPage == store.pages.length  ? 'btn-disabled text-gray-500': 'btn-secondary'" @click="store.next()" class="btn btn-xs  btn-outline">Siguiente</button>
             </div>
             <div v-if="!store.samePosition">
                 <span class="text-white text-xs">Pagina actual {{store.currentPage }}/{{store.pages.length}}</span>

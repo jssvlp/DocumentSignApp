@@ -47,9 +47,11 @@ const setSelectedDocument = async (_document) => {
     store.loading = true;
     store.document = _document
 
-    const files = await downloadFile(_document.IDDOCUMENT);
+    //const files = await downloadFile(_document.IDDOCUMENT);
     //store.file = files[0].route;
-    setFile( files[0].route);
+    setFile( '');
+
+    // setFile( files[0].route);
     store.showQr = true;
     //store.file = "http://127.0.0.1:8000/storage/LPFnOMfu5B.pdf";
 }

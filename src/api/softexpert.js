@@ -60,13 +60,11 @@ const saveDocumentData = async ( documentData, request, document ) =>{
 
 const getDocumentData = async ( document, request ) =>{
     const url = `${softexpertApi}/api/documents/request/${request}/document/${document}`;
-    console.log(url);
     var result = null;
 
     await axios.get( url).then( r => {
         result = r.data
     })
-
     return result;
 }
 
