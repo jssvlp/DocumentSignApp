@@ -67,12 +67,12 @@ export const useDocumentStore = defineStore('document', {
         setCurrentPage( page) {
             this.currentPage = parseInt(page)
         },
-        async setFile(file) {
+        async setFile(url) {
 
             const waitPdfBytes = await loadWaitPdfBytes();
             this.waitPdfFile = encode(waitPdfBytes);;
             
-            const url = 'https://apisoftexpert.servicios.mitur.gob.do/storage/6zOE5VWm9v.pdf'
+            // const url = 'https://apisoftexpert.servicios.mitur.gob.do/storage/6zOE5VWm9v.pdf'
             //const url = file.route;
             const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
