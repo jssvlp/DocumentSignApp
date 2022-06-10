@@ -70,9 +70,11 @@ export const useDocumentStore = defineStore('document', {
         async setFile(url) {
 
             const waitPdfBytes = await loadWaitPdfBytes();
-            this.waitPdfFile = encode(waitPdfBytes);;
+            this.waitPdfFile = encode(waitPdfBytes);
+
+            const a = 'https://fileserver.servicios.mitur.gob.do/file?id=eyJpdiI6ImxKRnNIMG1lbWtcLzZ1TG9QT3l1bUFRPT0iLCJ2YWx1ZSI6InFNR1BQa3BtU3JKaUxicGdhTXFBV2VONWJtUWhWVzZKNHQ4YkxJaVQ5OUk9IiwibWFjIjoiNWY3MTJiNGY1YWFkOGI0ZGYwODVhYjJmYTg0Y2UwNTA2ZDE1YTc3ZDUyM2E1YjA4OWUwOTU5NmI4ZTQzNTBiMSJ9&e=1654927330&s=f1179e8f9431cf6b04d7a6d388ba10dc';
             
-            const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
+            const existingPdfBytes = await fetch(a).then(res => res.arrayBuffer())
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
             const pages = pdfDoc.getPages();
             
@@ -141,7 +143,7 @@ export const useDocumentStore = defineStore('document', {
                 const page = pdfDoc.getPages()[this.currentPage - 1];
                 page.drawImage(pngImage, {
                     x: this.position.x,
-                    y:  this.position.y,
+                    y: this.position.y == 0 ? this.height - this.size : this.height -  (this.position.y + this.size),
                     width: this.size,
                     height: this.size,
                 });
