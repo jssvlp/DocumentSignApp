@@ -3,6 +3,7 @@
         <Overlay v-if="store.loading"/>
         <ToolsBar class="mb-3"/>
         <SelectFile v-if="!documentSelected" :show="documents.length > 0" :documents="documents" @selectDocument="setSelectedDocument"/>
+        <HandleUploadFile :show="store.showUploader" v-if="store.fromDevice" @uploaded="handleUploaded"/>
         <div class="flex space-x-2">
             <Options class="shadow-lg"/>
             <Viewer class="" v-if="!store.loading" />
@@ -14,6 +15,7 @@ import Viewer from '../components/Viewer.vue'
 import ToolsBar from '../components/ToolsBar.vue'
 import Options from '../components/Options.vue'
 import Overlay from '../components/Overlay.vue'
+import HandleUploadFile from '../components/HandleUploadFile.vue'
 import axios from 'axios'
 import { useDocumentStore} from '../stores/document'
 import { onMounted, ref } from 'vue'
@@ -33,6 +35,7 @@ const setFile = (file) => {
     store.setFile(file);
     store.loading = false;
 }
+
 
 const setPages = (pages) => {
     store.setPages = pages;
@@ -54,6 +57,10 @@ const setSelectedDocument = async (_document) => {
     //store.file = "http://127.0.0.1:8000/storage/LPFnOMfu5B.pdf";
 }
 
+const handleUploaded = (file) => {
+
+}
+
 const addText = (text) => {
     store.addText(text);
 }
@@ -68,12 +75,15 @@ onMounted( async () =>{
     store.documentData =  route.query.data
     store.company = route.query.company
     store.request = route.query.request
+    store.fromDevice = (route.query.fromDevice == 'true') ? true : false;
 
-    documents.value =  await getDocuments( store.request, route.query.filter );
-
-    store.setAllRequestDocuments(documents.value);
-
-    store.loading = false
+    if( !store.fromDevice){
+        documents.value =  await getDocuments( store.request, route.query.filter );
+        store.setAllRequestDocuments(documents.value);
+        store.loading = false
+    }else{
+        store.showUploader = true;
+    }
     
 });
 

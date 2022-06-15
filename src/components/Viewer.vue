@@ -7,7 +7,7 @@
             scrolling="no" 
             :width="store.width" 
             :height="store.height" 
-            :src="'data:application/pdf;base64,' + store.file +'#'+ 'toolbar=0&navpanes=&scrollbar=0&page=' + store.currentPage">
+            :src="store.src +'#'+ 'toolbar=0&navpanes=&scrollbar=0&page=' + store.currentPage">
         </iframe> 
         <img id="qr" v-if="store.showQr"  v-bind:style="{left: store.position.x + 'px', top: store.position.y + 'px'}"  src="/qr.png" :width="store.size" :height="store.size" alt="">
     </div>
@@ -16,6 +16,7 @@
 <script setup>
 import { useDocumentStore } from '../stores/document';
 import { ref } from 'vue'
+import VuePdfEmbed from 'vue-pdf-embed'
 
 const store = useDocumentStore();
 
