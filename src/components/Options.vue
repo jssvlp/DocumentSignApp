@@ -30,12 +30,13 @@
             <div class="flex mt-4">
                 <button  @click="insertQr" class="btn btn-sm btn-secondary w-full">Insertar</button>
             </div>
+             <div class="divider"></div>
             <div class="flex mt-4">
                 <button  @click="download()" class="btn btn-sm w-full">Descargar</button>
             </div>
         </div>
         
-        <div class="divider"></div>
+       
         <!-- <div class="card-actions justify-end mt-10">
             <button class="btn btn-primary" @click="upload">Finalizar</button>
             <button class="btn btn-ghost">Cancelar</button>
