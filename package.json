@@ -23,6 +23,7 @@
     "qrcode.vue": "^3.3.3",
     "utf8": "^3.0.0",
     "vue": "^3.2.25",
+    "vue-pdf-embed": "^1.1.2",
     "vue-router": "^4.0.13"
   },
   "devDependencies": {

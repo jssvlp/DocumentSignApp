@@ -6,6 +6,8 @@ import { loadWaitPdfBytes } from '../utils/wait.js';
 
 export const useDocumentStore = defineStore('document', {
     state: () => ({
+        fromDevice: false,
+        showUploader:false,
         src: null,
         file: null,
         showThisPage: null,
@@ -91,7 +93,10 @@ export const useDocumentStore = defineStore('document', {
             const pdfBytes = await pdfDoc.save();
             const base64String = encode(pdfBytes);
 
-            this.src = `data:application/pdf;base64,${base64String}#toolbar=0&navpanes=0&scrollbar=0`
+            const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
+            this.src = pdfDataUri;
+
+            //this.src = `data:application/pdf;base64,${base64String}#toolbar=0&navpanes=0&scrollbar=0`
             this.file = base64String
         },
         setSamePosition(samePosition) {

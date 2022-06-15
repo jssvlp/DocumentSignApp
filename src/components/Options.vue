@@ -36,10 +36,10 @@
         </div>
         
         <div class="divider"></div>
-        <div class="card-actions justify-end mt-10">
+        <!-- <div class="card-actions justify-end mt-10">
             <button class="btn btn-primary" @click="upload">Finalizar</button>
             <button class="btn btn-ghost">Cancelar</button>
-        </div>
+        </div> -->
     </div>
     </div>
 </template>
