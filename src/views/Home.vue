@@ -1,13 +1,11 @@
 <template lang="">
-    <div class="p-10 relative">
+    <div class="p-10">
         <Overlay v-if="store.loading"/>
-        <ToolsBar class="mb-3"/>
+        <ToolsBar style="position:absolute" class="mb-3"/>
         <SelectFile v-if="!documentSelected" :show="documents.length > 0" :documents="documents" @selectDocument="setSelectedDocument"/>
         <HandleUploadFile :show="store.showUploader" v-if="store.fromDevice" @uploaded="handleUploaded"/>
-        <div class="flex space-x-2">
-            <Options class="shadow-lg"/>
-            <Viewer class="" v-if="!store.loading" />
-        </div>
+        <Options v-if="store.src" class="shadow-lg options"/>
+        <Viewer class="viewer" v-if="!store.loading" />
     </div>
 </template>
 <script setup>
@@ -75,7 +73,7 @@ onMounted( async () =>{
     store.documentData =  route.query.data
     store.company = route.query.company
     store.request = route.query.request
-    store.fromDevice = (route.query.fromDevice == 'true') ? true : false;
+    store.fromDevice = (route.query.fromDevice == 1) ? true : false;
 
     if( !store.fromDevice){
         documents.value =  await getDocuments( store.request, route.query.filter );
@@ -89,6 +87,14 @@ onMounted( async () =>{
 
 
 </script>
-<style lang="">
-    
+<style scoped>
+    .options{
+        position: fixed; 
+        top: 0;
+        left: 0;
+        z-index: 9000;
+    }
+    .viewer{
+        margin-top: 300px;
+    }
 </style>

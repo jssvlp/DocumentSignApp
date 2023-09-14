@@ -68,4 +68,15 @@ const getDocumentData = async ( document, request ) =>{
     return result;
 }
 
-export  { downloadFile, uploadFile, getDocuments, getDocumentData, saveDocumentData }
+const getWorkflowData = async (workflowId) =>{
+    const url = `${softexpertApi}/api/projects/dpp/${workflowId}`;
+
+    var result = null;
+
+    await axios.get( url).then( r => {
+        result = r.data
+    })
+    return result;
+}
+
+export  { downloadFile, uploadFile, getDocuments, getDocumentData, saveDocumentData, getWorkflowData }
