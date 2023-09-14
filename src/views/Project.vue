@@ -139,7 +139,7 @@ onMounted(async () => {
 
     data.value = project
 
-    const categories = ['DPPPLANOSDEFINITIVOS', 'DPPCERTDEF']
+    const categories = ['DPPCERTDEF']
     const workflowDocuments = await getDocuments(solicitud,categories)
 
     console.log(workflowDocuments)
