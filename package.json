@@ -14,6 +14,7 @@
     "daisyui": "^2.13.4",
     "downloadjs": "^1.4.7",
     "jspdf": "^2.5.1",
+    "momentjs": "^2.0.0",
     "pdf-lib": "^1.17.1",
     "pdfjs": "^2.4.7",
     "pdfvuer": "^2.0.1",
@@ -23,6 +24,7 @@
     "qrcode.vue": "^3.3.3",
     "utf8": "^3.0.0",
     "vue": "^3.2.25",
+    "vue-pdf": "^4.3.0",
     "vue-pdf-embed": "^1.1.2",
     "vue-router": "^4.0.13"
   },

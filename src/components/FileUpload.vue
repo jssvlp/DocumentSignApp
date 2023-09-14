@@ -30,7 +30,7 @@ const handleFileUpload = async() => {
 
     //generate random string
     const randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    store.document = { IDDOCUMENT:randomString };
+    store.document = { IDDOCUMENT:randomString, NMTITLE: file.value.files[0].name.replace('.pdf','') };
 
     const qrUrl = `${appUrl}/documents/validate?solicitud=${store.request}&documento=${randomString}`;
     createQr(qrUrl);
@@ -41,9 +41,6 @@ const handleFileUpload = async() => {
 <template>
     <div class="flex flex-wrap -mx-3 mb-6">
         <div class="w-full px-3">
-            <!-- <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
-                Documento pdf
-            </label> -->
             <div class="max-w-md mx-auto bg-white rounded-lg overflow-hidden md:max-w-lg">
                 <div class="md:flex">
                     <div class="w-full">
@@ -52,7 +49,8 @@ const handleFileUpload = async() => {
                                 <div class="relative h-40 rounded-lg border-dashed border-2 border-gray-200 bg-white flex justify-center items-center hover:cursor-pointer">
                                     <div class="absolute">
                                         <div class="flex flex-col items-center "> <i class="fa fa-cloud-upload fa-3x text-gray-200"></i> <span class="block text-gray-400 font-normal">Arrastra un documento hasta aquí</span> <span class="block text-gray-400 font-normal">o</span> <span class="block text-blue-400 font-normal">búscalo en tus archivos</span> </div>
-                                    </div> <input ref="file"  v-on:change="handleFileUpload()" accept=".pdf"  type="file" class="h-full w-full opacity-0 cursor-pointer" name="">
+                                    </div> 
+                                    <input ref="file"  v-on:change="handleFileUpload()" accept=".pdf"  type="file" class="h-full w-full opacity-0 cursor-pointer" name="">
                                 </div>
                             </div>
                         </div>

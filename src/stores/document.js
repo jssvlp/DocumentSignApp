@@ -20,8 +20,8 @@ export const useDocumentStore = defineStore('document', {
         height: 0,
         qr: null,
         position: {
-            x: 435,
-            y: 30
+            x: 0,
+            y: 0
         },
         pagesDone: [],
         document: null,
@@ -53,22 +53,22 @@ export const useDocumentStore = defineStore('document', {
         },
         next(){
             this.currentPage++
-            const copy = this.file
-            this.file = this.waitPdfFile
-            this.showQr = false
-            setTimeout(() => {
-                this.file = copy
-                this.showQr = true
-            }, 100);
+            const copy = this.src
+                this.src = this.waitPdfFile
+                this.showQr = false
+                setTimeout(() => {
+                    this.src = copy
+                    this.showQr = true
+                }, 100);
         },
         prev(){
             if(this.currentPage > 1){
                 this.currentPage--
-                const copy = this.file
-                this.file = this.waitPdfFile
+                const copy = this.src
+                this.src = this.waitPdfFile
                 this.showQr = false
                 setTimeout(() => {
-                    this.file = copy
+                    this.src = copy
                     this.showQr = true
                 }, 100);
             }
@@ -79,7 +79,9 @@ export const useDocumentStore = defineStore('document', {
         async setFile(url) {
 
             const waitPdfBytes = await loadWaitPdfBytes();
-            this.waitPdfFile = encode(waitPdfBytes);
+            const pdfWaitDoc = await PDFDocument.load(waitPdfBytes)
+            const waitPdfUri = await pdfWaitDoc.saveAsBase64({ dataUri: true });
+            this.waitPdfFile = waitPdfUri
 
             const existingPdfBytes = await fetch(url).then(res => res.arrayBuffer())
             const pdfDoc = await PDFDocument.load(existingPdfBytes)
@@ -161,8 +163,10 @@ export const useDocumentStore = defineStore('document', {
             const pdfBytes = await pdfDoc.save()
             
             var base64String = encode(pdfBytes)
+            const pdfDataUri = await pdfDoc.saveAsBase64({ dataUri: true });
+            this.src = pdfDataUri;
             this.file =  base64String
-            this.src = `data:application/pdf;base64,${base64String}#toolbar=0&navpanes=0&scrollbar=0`
+            // this.src = `data:application/pdf;base64,${base64String}#toolbar=0&navpanes=0&scrollbar=0`
             this.showQr = false
 
         },
