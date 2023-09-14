@@ -1,12 +1,11 @@
 <template lang="">
-    <div class="p-10 relative">
+    <div class="p-10">
         <Overlay v-if="store.loading"/>
-        <ToolsBar class="mb-3"/>
+        <ToolsBar style="position:absolute" class="mb-3"/>
         <SelectFile v-if="!documentSelected" :show="documents.length > 0" :documents="documents" @selectDocument="setSelectedDocument"/>
-        <div class="flex space-x-2">
-            <Options class="shadow-lg"/>
-            <Viewer class="" v-if="!store.loading" />
-        </div>
+        <HandleUploadFile :show="store.showUploader" v-if="store.fromDevice" @uploaded="handleUploaded"/>
+        <Options v-if="store.src" class="shadow-lg options"/>
+        <Viewer class="viewer" v-if="!store.loading" />
     </div>
 </template>
 <script setup>
@@ -14,6 +13,7 @@ import Viewer from '../components/Viewer.vue'
 import ToolsBar from '../components/ToolsBar.vue'
 import Options from '../components/Options.vue'
 import Overlay from '../components/Overlay.vue'
+import HandleUploadFile from '../components/HandleUploadFile.vue'
 import axios from 'axios'
 import { useDocumentStore} from '../stores/document'
 import { onMounted, ref } from 'vue'
@@ -33,6 +33,7 @@ const setFile = (file) => {
     store.setFile(file);
     store.loading = false;
 }
+
 
 const setPages = (pages) => {
     store.setPages = pages;
@@ -54,6 +55,10 @@ const setSelectedDocument = async (_document) => {
     //store.file = "http://127.0.0.1:8000/storage/LPFnOMfu5B.pdf";
 }
 
+const handleUploaded = (file) => {
+
+}
+
 const addText = (text) => {
     store.addText(text);
 }
@@ -68,17 +73,28 @@ onMounted( async () =>{
     store.documentData =  route.query.data
     store.company = route.query.company
     store.request = route.query.request
+    store.fromDevice = (route.query.fromDevice == 1) ? true : false;
 
-    documents.value =  await getDocuments( store.request, route.query.filter );
-
-    store.setAllRequestDocuments(documents.value);
-
-    store.loading = false
+    if( !store.fromDevice){
+        documents.value =  await getDocuments( store.request, route.query.filter );
+        store.setAllRequestDocuments(documents.value);
+        store.loading = false
+    }else{
+        store.showUploader = true;
+    }
     
 });
 
 
 </script>
-<style lang="">
-    
+<style scoped>
+    .options{
+        position: fixed; 
+        top: 0;
+        left: 0;
+        z-index: 9000;
+    }
+    .viewer{
+        margin-top: 300px;
+    }
 </style>

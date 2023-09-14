@@ -3,11 +3,14 @@
         <div class="logo flex justify-center">
             <img height="250" width="250" src="https://www.mitur.gob.do/wp-content/uploads/2020/11/LogoMitur-2.svg" alt="">
         </div>
-        <div class="flex bg-success p-3 rounded-lg mb-5 mt-10 justify-center">
+        <div v-if="fields.length > 0" class="flex bg-success p-3 rounded-lg mb-5 mt-10 justify-center">
             <span class="font-bold text-white text-2xl">¡Datos validados correctamente!</span>
         </div>
+        <div v-else class="flex  p-3 rounded-lg mb-5 mt-10 justify-center">
+            <span class="font-bold text-red-500 text-2xl">¡No ha sido posible validar los datos!</span>
+        </div>
         
-        <div class="shadow-lg p-10 rounded-lg">
+        <div v-if="fields.length > 0" class="shadow-lg p-10 rounded-lg">
             <div class=" mt-3 mb-4">
                 <span class="text-xl font-semibold mb-2">Información del documento</span>
                 <br>
@@ -49,6 +52,7 @@ const fields = ref([]);
 
 onMounted(async () => {
     const { documento, solicitud } = route.query;
+
     const { data } = await getDocumentData(documento, solicitud);
     const parsed = JSON.parse(data.data);
 
