@@ -1,13 +1,17 @@
 <template>
-    <div class="p-10">
+    <div class="p-10 ">
         <div class="logo flex justify-center">
             <img height="250" width="250" src="https://www.mitur.gob.do/wp-content/uploads/2020/11/LogoMitur-2.svg" alt="">
         </div>
-        <div v-if="data" class="flex bg-success p-3 rounded-lg mb-5 mt-10 justify-center">
+        <div v-if="data && canShowData" class="flex bg-success p-3 rounded-lg mb-5 mt-10 justify-center">
             <span class="font-bold text-white text-2xl">¡Datos validados correctamente!</span>
         </div>
+
+        <p class="text-center mt-10 text-xl" v-if="isLoading">Validando datos...</p>
+
+        <DataNotAvailable v-if="!canShowData && data" :project="data"/>
         
-        <div class="shadow-lg p-10 rounded-lg">
+        <div v-if="data && canShowData" class="shadow-lg p-10 rounded-lg bg-white">
             <div class=" mt-3 mb-4">
                 <span class="text-xl font-semibold mb-2">Información del documento</span>
                 <br>
@@ -96,7 +100,7 @@
                 
             </div>
         </div>
-        <div class="shadow-lg p-10 rounded-lg space-y-2 ">
+        <div v-if="canShowData" class="shadow-lg p-10 rounded-lg space-y-2 ">
             <span class="text-gray-400">Documentos relacionados a la solicitud</span>
             <div v-for="(document,index) in documents" :key="index" class="rounded-md border-2 p-2 flex justify-between">
                 <div class="flex">
@@ -115,10 +119,13 @@ import { ref } from 'vue';
 import { getDocumentData, getDocuments, getWorkflowData } from '../api/softexpert';
 import { PaperClipIcon } from '@heroicons/vue/solid';
 import { softexpertApi } from '../hosts';
+import DataNotAvailable from '../components/DataNotAvailable.vue';
 
 const route = useRoute();
 const data = ref(null);
 const documents = ref([]);
+const canShowData = ref(false);
+const isLoading = ref(false)
 
 const getDocumentViewerUrl = (document) => {
     return `${softexpertApi}/api/documents/${document}/viewer`;
@@ -135,14 +142,25 @@ onMounted(async () => {
         
         window.location.href = redirect
     }
+    isLoading.value = true
     const { project }  = await getWorkflowData(solicitud)
+    isLoading.value = false
 
     data.value = project
+    
+    if( project.respuestaOtorgada === "Otorgar No Objeción de Uso de Suelo" && project.estado === 'En marcha'){
+        return
+    }
+
+
+    canShowData.value = true
+
+
+    
 
     const categories = ['DPPCERTDEF']
     const workflowDocuments = await getDocuments(solicitud,categories)
-
-    console.log(workflowDocuments)
+    
 
     documents.value = workflowDocuments;
 });
